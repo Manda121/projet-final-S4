@@ -1,2 +1,0 @@
-# projet-final-S4
-ETU003280, ETU003299, ETU003313
