@@ -14,6 +14,14 @@ create table finance_s4_fond(
     foreign key (id_etablissement) references finance_s4_etablissement(id_etablissement)
 );
 
+create table finance_s4_etablissement_user(
+    id_etablissement_user int AUTO_INCREMENT PRIMARY key,
+    id_user int,
+    id_etablissement int,
+    foreign key (id_user) references finance_s4_user(id_user),
+    foreign key (id_etablissement) references finance_s4_etablissement(id_etablissement)
+);
+
 create table finance_s4_user(
     id_user int AUTO_INCREMENT PRIMARY key,
     nom VARCHAR(100),
