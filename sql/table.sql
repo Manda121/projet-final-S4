@@ -73,7 +73,6 @@ create table finance_s4_remise(
 
 ALTER TABLE finance_s4_fond MODIFY COLUMN montant numeric DEFAULT 0;
 
-ALTER TABLE finance_s4_type_pret MODIFY COLUMN taux numeric DEFAULT 0;
 ALTER TABLE finance_s4_type_pret MODIFY COLUMN montant_min numeric DEFAULT 0;
 ALTER TABLE finance_s4_type_pret MODIFY COLUMN montant_max numeric DEFAULT 0;
 
