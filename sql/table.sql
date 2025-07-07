@@ -29,6 +29,9 @@ create table finance_s4_type_pret(
     libelle VARCHAR(100),
     id_etablissement int,
     taux numeric,
+    montant_min numeric,
+    montant_max numeric,
+    delai_mois_max int,
     foreign key (id_etablissement) references finance_s4_etablissement(id_etablissement)
 );
 
@@ -40,6 +43,7 @@ create table finance_s4_pret(
     description text,
     montant numeric,
     date_limite date,
+    etat ENUM("en attente", "validee", "refusee") default "en attente",
     foreign key (id_type_pret) references finance_s4_type_pret(id_type_pret),
     foreign key (id_user) references finance_s4_user(id_user)
 );
