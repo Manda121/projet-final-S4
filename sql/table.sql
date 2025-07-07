@@ -34,7 +34,7 @@ create table finance_s4_type_pret(
 
 create table finance_s4_pret(
     id_pret int AUTO_INCREMENT PRIMARY key,
-    id_user int
+    id_user int,
     id_type_pret int,
     date_pret date,
     description text,
