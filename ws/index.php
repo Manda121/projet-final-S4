@@ -2,6 +2,19 @@
 require 'vendor/autoload.php';
 require 'db.php';
 
+if($_SERVER['REQUEST_METHOD']=='OPTION'){
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Headers: Content-Type");
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+    http_response_code(200);
+    exit();
+}
+Flight::before('start', function(&$params,&$output){
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Headers: Content-Type");
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+});
+
 Flight::route('GET /etudiants', function() {
     $db = getDB();
     $stmt = $db->query("SELECT * FROM etudiant");
