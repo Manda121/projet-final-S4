@@ -31,7 +31,7 @@ create table finance_s4_type_pret(
     taux numeric,
     montant_min numeric,
     montant_max numeric,
-    delai_mois_max int,
+    delai_mois_max int default 1,
     foreign key (id_etablissement) references finance_s4_etablissement(id_etablissement)
 );
 
