@@ -1,8 +1,12 @@
 <?php
+session_start();
+
 require 'vendor/autoload.php';
 require 'db.php';
 
 require 'routes/etudiantRoutes.php';
+require 'routes/TypesPretRouteManda.php';
+require 'routes/UserRouteManda.php';
 
 Flight::route('GET /etudiantsvv', function() {
     $db = getDB();

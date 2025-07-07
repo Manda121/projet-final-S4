@@ -1,7 +1,7 @@
 <?php
 function getDB() {
     $host = '127.0.0.1';
-    $dbname = 'tp_flight';
+    $dbname = 'finance_s4';
     $username = 'root';
     $password = 'mysql';
 

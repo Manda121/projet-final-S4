@@ -311,7 +311,7 @@ Here's an example of loading a database connection:
 
 ```php
 // Register class with constructor parameters
-Flight::register('db', 'PDO', array('mysql:host=127.0.0.1;dbname=test','root','mysql'));
+Flight::register('db', 'PDO', array('mysql:host=127.0.0.1;dbname=finance_s4','root','mysql'));
 
 // Get an instance of your class
 // This will create an object with the defined parameters
@@ -327,7 +327,7 @@ new object. The callback function takes one parameter, an instance of the new ob
 
 ```php
 // The callback will be passed the object that was constructed
-Flight::register('db', 'PDO', array('mysql:host=127.0.0.1;dbname=test','root','mysql'), function($db){
+Flight::register('db', 'PDO', array('mysql:host=127.0.0.1;dbname=finance_s4','root','mysql'), function($db){
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 });
 ```
