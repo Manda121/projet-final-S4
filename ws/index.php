@@ -2,7 +2,9 @@
 require 'vendor/autoload.php';
 require 'db.php';
 
-Flight::route('GET /etudiants', function() {
+require 'routes/etudiantRoutes.php';
+
+Flight::route('GET /etudiantsvv', function() {
     $db = getDB();
     $stmt = $db->query("SELECT * FROM etudiant");
     Flight::json($stmt->fetchAll(PDO::FETCH_ASSOC));
