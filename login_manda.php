@@ -187,7 +187,7 @@
 
             ajax('POST', '/users/login', `email=${encodeURIComponent(email)}&mot_de_passe=${encodeURIComponent(password)}`, (response) => {
                 if (response.success) {
-                    window.location.href = 'index.php';
+                    window.location.href = 'index.html';
                 } else {
                     const errorElement = document.getElementById('login-error');
                     errorElement.textContent = "response.success";
@@ -230,10 +230,10 @@
 
             ajax('POST', '/users', data, (response) => {
                 if (response.id) {
-                    afficherSucces("Inscription réussie ! Vous pouvez maintenant vous connecter.");
                     showLoginForm();
+                    // afficherSucces("Inscription réussie ! Vous pouvez maintenant vous connecter.");
                 } else {
-                    afficherErreur("Erreur lors de l'inscription.");
+                    // afficherErreur("Erreur lors de l'inscription.");
                 }
             });
         }

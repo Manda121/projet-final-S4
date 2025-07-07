@@ -35,6 +35,14 @@ class UserManda
 
     public function create($data)
     {
+        // Vérifier si l'email existe déjà
+        if ($this->getByEmail($data['email'])) {
+            return [
+                'success' => false,
+                'message' => 'Cette adresse email est déjà utilisée'
+            ];
+        }
+
         $stmt = $this->db->prepare("INSERT INTO finance_s4_user (nom, prenom, email, date_de_naissance, mot_de_passe, role_user) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $data['nom'],
@@ -44,7 +52,11 @@ class UserManda
             $data['mot_de_passe'],
             $data['role_user'] ?? 'client' // Par défaut 'client' si non spécifié
         ]);
-        return $this->db->lastInsertId();
+        return [
+            'success' => true,
+            'id' => $this->db->lastInsertId(),
+            'message' => 'Utilisateur créé avec succès'
+        ];
     }
 
     public function update($id, $data)

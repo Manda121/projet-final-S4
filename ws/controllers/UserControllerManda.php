@@ -27,18 +27,28 @@ class UserControllerManda
     public function create()
     {
         $data = Flight::request()->data->getData();
-        
+
         // Validation des champs obligatoires
         $requiredFields = ['nom', 'prenom', 'email', 'date_de_naissance', 'mot_de_passe'];
+        foreach ($requiredFields as $field) {
+            if (empty($data[$field])) {
+                Flight::json(['success' => false, 'message' => "Le champ $field est requis"], 400);
+                return;
+            }
+        }
 
-        $id = $this->model->create($data);
-        Flight::json(['message' => 'Utilisateur créé', 'id' => $id], 201);
+        $result = $this->model->create($data);
+
+        if ($result['success']) {
+            Flight::json(['success' => true, 'message' => $result['message'], 'id' => $result['id']], 201);
+        } else {
+            Flight::json(['success' => false, 'message' => $result['message']], 400);
+        }
     }
-
     public function update($id)
     {
         $data = Flight::request()->data->getData();
-        
+
         if (!isset($data['nom']) || !isset($data['prenom']) || !isset($data['email'])) {
             Flight::halt(400, "Les champs nom, prenom et email sont obligatoires");
         }
@@ -50,13 +60,13 @@ class UserControllerManda
     public function login()
     {
         $data = Flight::request()->data->getData();
-        
+
         if (!isset($data['email']) || !isset($data['mot_de_passe'])) {
             Flight::halt(400, "Email et mot de passe sont requis");
         }
 
         $result = $this->model->verifyCredentials($data['email'], $data['mot_de_passe']);
-        
+
         if (!$result['success']) {
             Flight::halt(401, $result['message']);
         }

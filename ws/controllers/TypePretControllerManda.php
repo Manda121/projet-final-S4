@@ -1,5 +1,4 @@
 <?php
-
 namespace Controllers;
 
 use App\TypePretManda;
@@ -27,27 +26,20 @@ class TypePretControllerManda
     public function create()
     {
         $data = Flight::request()->data->getData();
+        if (!isset($data['libelle']) || !isset($data['taux']) || !isset($data['montantMinimum']) || !isset($data['montantMaximum']) || !isset($data['delaiMax'])) {
+            Flight::halt(400, "Tous les champs sont obligatoires");
+        }
         $id = $this->model->create($data);
         Flight::json(['message' => 'Type pret ajouté', 'id' => $id]);
     }
 
     public function update($id)
     {
-        parse_str(file_get_contents("php://input"), $data);  // <-- ici
-        // var_dump($data); exit; // décommenter pour debug
-
-        if (!isset($data['libelle'])) {
-            Flight::halt(400, "Le champ libelle est obligatoire");
+        parse_str(file_get_contents("php://input"), $data);
+        if (!isset($data['libelle']) || !isset($data['taux']) || !isset($data['montantMinimum']) || !isset($data['montantMaximum']) || !isset($data['delaiMax'])) {
+            Flight::halt(400, "Tous les champs sont obligatoires");
         }
-
         $this->model->update($id, $data);
-
         Flight::json(['message' => 'Type de prêt modifié']);
     }
-
-
-    // public function delete($id) {
-    //     $this->model->delete($id);
-    //     Flight::json(['message' => 'Étudiant supprimé']);
-    // }
 }

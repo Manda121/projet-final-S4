@@ -12,13 +12,29 @@
         </thead>
         <tbody></tbody>
     </table>
-    <form id="pret-form">
-        Libelle: <input type="text" name="libelle" id="libelle" value="etdf"><br>
-        Taux: <input type="number" name="taux" id="taux" value="2"><br>
-        Montant Minimum: <input type="number" name="montantMinimum" id="montantMinimum" value="10"><br>
-        Montant Maximum: <input type="number" name="montantMaximum" id="montantMaximum" value="11"><br>
-        Delai Mois Max: <input type="number" name="delaiMax" id="delaiMax" value="2"><br>
-        <button type="button" onclick="ajouterTypePret()">Valider</button>
-    </form>
+   <form id="form-type-pret">
+    <label for="libelle">Libellé:</label>
+    <input type="text" id="libelle" name="libelle" required><br>
+    
+    <label>Taux (%):</label>
+    <div id="taux-container">
+        <div class="taux-row">
+            <input type="number" name="taux[]" step="0.01" required>
+            <button type="button" onclick="removeTaux(this)">🗑️</button>
+        </div>
+    </div>
+    <button type="button" onclick="addTaux()">Ajouter un autre taux</button><br>
+    
+    <label for="montantMinimum">Montant Minimum:</label>
+    <input type="number" id="montantMinimum" name="montantMinimum" required><br>
+    
+    <label for="montantMaximum">Montant Maximum:</label>
+    <input type="number" id="montantMaximum" name="montantMaximum" required><br>
+    
+    <label for="delaiMax">Délai Max (mois):</label>
+    <input type="number" id="delaiMax" name="delaiMax" required><br>
+    
+    <button type="button" onclick="ajouterTypePret()">Ajouter Type de Prêt</button>
+</form>
 
     
