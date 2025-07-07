@@ -83,8 +83,11 @@
     </div>
 
     <div id="register-form" class="hidden">
+        <div id="register-error" style="display:none; color:red;"></div>
+        <div id="register-success" style="display:none; color:green;"></div>
         email: <input type="email" name="reg_email" id="reg_email">
         nom: <input type="text" name="reg_nom" id="reg_nom">
+        prenom: <input type="text" name="reg_prenom" id="reg_prenom">
         <span class="password-container">
             mot de passe: <input type="password" name="reg_mdp" id="reg_mdp" oninput="validatePassword()">
             <button type="button" class="toggle-password" aria-label="Afficher / cacher le mot de passe">👁️</button>
@@ -93,6 +96,7 @@
             confirmer mot de passe: <input type="password" name="reg_mdp_confirm" id="reg_mdp_confirm" oninput="validatePassword()">
             <button type="button" class="toggle-password" aria-label="Afficher / cacher le mot de passe">👁️</button>
         </span>
+        date de naissance: <input type="date" name="date_naissance" id="date_naissance">
         <div id="password-error" class="error-message"></div>
         role: <select name="role" id="role">
             <option value="client">client</option>
@@ -197,33 +201,63 @@
 
         function register() {
             if (!validatePassword()) {
-                alert('Veuillez corriger les erreurs avant de soumettre.');
+                afficherErreur("Veuillez corriger les erreurs avant de soumettre.");
                 return;
             }
 
-            const data = {
-                email: document.getElementById('reg_email').value,
-                mot_de_passe: document.getElementById('reg_mdp').value,
-                role_user: document.getElementById('role').value,
-                nom: 'nom', // À remplacer par des champs supplémentaires si nécessaire
-                prenom: 'prenom', // À remplacer par des champs supplémentaires si nécessaire
-                date_de_naissance: '2000-01-01' // À remplacer par un champ date si nécessaire
-            };
+            const email = document.getElementById('reg_email').value;
+            const mot_de_passe = document.getElementById('reg_mdp').value;
+            const role_user = document.getElementById('role').value;
 
-            if (!data.email || !data.mot_de_passe) {
-                alert('Veuillez remplir tous les champs obligatoires');
+            const nom = document.getElementById('reg_nom').value; // à remplacer par un champ réel si disponible
+            const prenom = document.getElementById('reg_prenom').value;; // idem
+            const date_de_naissance = document.getElementById('date_naissance').value;; // idem
+
+            if (!email || !mot_de_passe || !role_user) {
+                afficherErreur("Veuillez remplir tous les champs obligatoires.");
                 return;
             }
 
-            ajax('POST', '/users', JSON.stringify(data), (response) => {
+            const data =
+                `email=${encodeURIComponent(email)}&` +
+                `mot_de_passe=${encodeURIComponent(mot_de_passe)}&` +
+                `role_user=${encodeURIComponent(role_user)}&` +
+                `nom=${encodeURIComponent(nom)}&` +
+                `prenom=${encodeURIComponent(prenom)}&` +
+                `date_de_naissance=${encodeURIComponent(date_de_naissance)}`;
+            
+            // console.log(data);
+
+            ajax('POST', '/users', data, (response) => {
                 if (response.id) {
-                    alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+                    afficherSucces("Inscription réussie ! Vous pouvez maintenant vous connecter.");
                     showLoginForm();
                 } else {
-                    alert("Erreur lors de l'inscription");
+                    afficherErreur("Erreur lors de l'inscription.");
                 }
-            }, 'application/json');
+            });
         }
+
+        function afficherErreur(message) {
+            const div = document.getElementById('register-error');
+            if (div) {
+                div.textContent = message;
+                div.style.display = 'block';
+            } else {
+                alert(message); // fallback
+            }
+        }
+
+        function afficherSucces(message) {
+            const div = document.getElementById('register-success');
+            if (div) {
+                div.textContent = message;
+                div.style.display = 'block';
+            } else {
+                alert(message); // fallback
+            }
+        }
+
 
         function showError(message) {
             const errorElement = document.getElementById('login-error');

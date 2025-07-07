@@ -41,7 +41,7 @@ class UserManda
             $data['prenom'],
             $data['email'],
             $data['date_de_naissance'],
-            password_hash($data['mot_de_passe'], PASSWORD_DEFAULT),
+            $data['mot_de_passe'],
             $data['role_user'] ?? 'client' // Par défaut 'client' si non spécifié
         ]);
         return $this->db->lastInsertId();
