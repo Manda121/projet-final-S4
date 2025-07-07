@@ -34,12 +34,14 @@ create table finance_s4_type_pret(
 
 create table finance_s4_pret(
     id_pret int AUTO_INCREMENT PRIMARY key,
+    id_user int
     id_type_pret int,
     date_pret date,
     description text,
     montant numeric,
     date_limite date,
-    foreign key (id_type_pret) references finance_s4_type_pret(id_type_pret)
+    foreign key (id_type_pret) references finance_s4_type_pret(id_type_pret),
+    foreign key (id_user) references finance_s4_user(id_user)
 );
 
 create table finance_s4_remise(
