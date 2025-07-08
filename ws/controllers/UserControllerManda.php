@@ -73,6 +73,8 @@ class UserControllerManda
 
         // Retourner les infos utilisateur sans le mot de passe
         unset($result['user']['mot_de_passe']);
+        $_SESSION['id_user'] = 1;
+        $_SESSION['id_etablissement'] = 1;
         Flight::json($result);
     }
 
