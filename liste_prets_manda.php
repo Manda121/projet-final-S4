@@ -1,7 +1,5 @@
 <?php
-$_SESSION["id_user"] = 1;
-$_SESSION["id_etablissement"] = 1;
-
+session_start();
 $pageTitle = 'Liste Pret';
 $activeMenu = 'liste_prets_manda';
 ob_start();

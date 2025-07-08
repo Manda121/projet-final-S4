@@ -1,4 +1,5 @@
 <?php
+session_start();
 $pageTitle = 'Ajouter un fond';
 $activeMenu = 'ajout_fond';
 ob_start();

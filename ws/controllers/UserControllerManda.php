@@ -73,8 +73,8 @@ class UserControllerManda
 
         // Retourner les infos utilisateur sans le mot de passe
         unset($result['user']['mot_de_passe']);
-        $_SESSION['id_user'] = 1;
-        $_SESSION['id_etablissement'] = 1;
+        $_SESSION['id_user'] = $result['user']['id_user'];
+        $_SESSION['id_etablissement'] = $result['user']['id_etablissement'] ?? null;
         Flight::json($result);
     }
 
@@ -82,5 +82,15 @@ class UserControllerManda
     {
         $this->model->delete($id);
         Flight::json(['message' => 'Utilisateur supprimé']);
+    }
+
+    public function getEtablissements()
+    {
+        $result = $this->model->getEtablissements();
+        if (isset($result['success']) && !$result['success']) {
+            Flight::json($result, 500);
+        } else {
+            Flight::json($result);
+        }
     }
 }

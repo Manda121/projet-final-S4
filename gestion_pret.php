@@ -7,6 +7,15 @@ ob_start();
 <header class="content-header">
   <h1>Gestion des Prêts en Attente</h1>
   <p>Validez ou refusez les demandes de prêts en attente</p>
+  <link rel="stylesheet" href="remboursement.css">
+  <style>
+    #modif {
+      background-color:green ;
+    }
+    #supp {
+      background-color:red ;
+    }
+  </style>
 </header>
 
 <div class="table-container">

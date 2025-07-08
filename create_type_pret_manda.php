@@ -1,7 +1,5 @@
 <?php
-$_SESSION["id_user"] = 1;
-$_SESSION["id_etablissement"] = 1;
-
+session_start();
 $pageTitle = 'creation type de pret';
 $activeMenu = 'create_type_pret_manda';
 ob_start();
@@ -14,40 +12,7 @@ ob_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creation de type de pret</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            padding: 20px;
-        }
-
-        input,
-        button {
-            margin: 5px;
-            padding: 5px;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        th,
-        td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        .editable input {
-            width: 100%;
-            box-sizing: border-box;
-        }
-    </style>
+    
 </head>
 
 <body>
@@ -180,10 +145,6 @@ function chargerTypePret() {
                 <td class="montant_minu">${e.montant_min}</td>
                 <td class="montant_maxu">${e.montant_max}</td>
                 <td class="delai_mois_maxu">${e.delai_mois_max}</td>
-                <td>
-                    <button onclick='UpdateTypePret(this, ${JSON.stringify(e)})'>✏️</button>
-                    <button onclick='supprimerTypePret(${e.id_type_pret})'>🗑️</button>
-                </td>
             `;
             tbody.appendChild(tr);
         });

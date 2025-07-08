@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -326,12 +330,12 @@
                 <form>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" value="jean.dupont@email.com" required>
                     </div>
                     <div class="form-group">
                         <label for="mdp">Mot de passe</label>
                         <div class="password-container">
-                            <input type="password" id="mdp" name="mdp" required>
+                            <input type="password" id="mdp" name="mdp" value="password123" required>
                             <button type="button" class="toggle-password" aria-label="Afficher/masquer le mot de passe">👁️</button>
                         </div>
                     </div>
@@ -387,6 +391,11 @@
                     <div class="form-group">
                         <label for="date_naissance">Date de naissance</label>
                         <input type="date" id="date_naissance" name="date_naissance" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="etablissement">etablissement</label>
+                        <select id="etablissement" name="etablissement" required>
+                            <select>
                     </div>
                     <div class="form-group" style="display: none;">
                         <label for="role">Type de compte</label>
@@ -520,7 +529,7 @@
                 if (response.success) {
                     showLoginSuccess('Connexion réussie ! Redirection en cours...');
                     setTimeout(() => {
-                        window.location.href = 'home.html';
+                        window.location.href = 'home.php';
                     }, 1500);
                 } else {
                     showLoginError(response.message || 'Identifiants incorrects');
@@ -528,6 +537,62 @@
             }, (xhr) => {
                 showLoginError('Erreur de connexion au serveur');
             });
+        }
+
+        fetchEtablissements();
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     // Fetch establishments and populate dropdown
+
+        //     // Toggle password visibility
+        //     document.querySelectorAll('.toggle-password').forEach(button => {
+        //         button.addEventListener('click', () => {
+        //             const passwordInput = button.previousElementSibling;
+        //             passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+        //             button.textContent = passwordInput.type === 'password' ? '👁️' : '🙈';
+        //         });
+        //     });
+        // });
+
+        function fetchEtablissements() {
+            ajax('GET', '/etablissements', null, (response) => {
+                const select = document.getElementById('etablissement');
+                response.forEach(etablissement => {
+                    const option = document.createElement('option');
+                    option.value = etablissement.id_etablissement;
+                    option.textContent = etablissement.nom;
+                    select.appendChild(option);
+                });
+            }, (xhr) => {
+                showRegisterError('Erreur lors de la récupération des établissements');
+            });
+        }
+
+        // Fonction de validation du mot de passe
+        function validatePassword() {
+            const password = document.getElementById('reg_mdp').value;
+            const confirmPassword = document.getElementById('reg_mdp_confirm').value;
+            const errorElement = document.getElementById('password-error');
+
+            let errorMessage = '';
+
+            // Vérification de la longueur
+            if (password.length < 8) {
+                errorMessage += 'Le mot de passe doit contenir au moins 8 caractères. ';
+            }
+
+            // Vérification de la majuscule
+            if (!/[A-Z]/.test(password)) {
+                errorMessage += 'Le mot de passe doit contenir au moins une majuscule. ';
+            }
+
+            // Vérification de la correspondance
+            if (password !== confirmPassword) {
+                errorMessage += 'Les mots de passe ne correspondent pas.';
+            }
+
+            errorElement.textContent = errorMessage;
+
+            return errorMessage === '';
         }
 
         function register() {
@@ -542,9 +607,10 @@
             const nom = document.getElementById('reg_nom').value;
             const prenom = document.getElementById('reg_prenom').value;
             const date_de_naissance = document.getElementById('date_naissance').value;
+            const etablissement = document.getElementById('etablissement').value;
 
-            if (!email || !mot_de_passe || !role_user || !nom || !prenom || !date_de_naissance) {
-                showRegisterError("Veuillez remplir tous les champs obligatoires.");
+            if (!email || !mot_de_passe || !role_user || !nom || !prenom || !date_de_naissance || !etablissement) {
+                showRegisterError("Veuillez remplir tous les champs obligatoires, y compris l'établissement.");
                 return;
             }
 
@@ -554,19 +620,25 @@
                 `role_user=${encodeURIComponent(role_user)}&` +
                 `nom=${encodeURIComponent(nom)}&` +
                 `prenom=${encodeURIComponent(prenom)}&` +
-                `date_de_naissance=${encodeURIComponent(date_de_naissance)}`;
+                `date_de_naissance=${encodeURIComponent(date_de_naissance)}&` +
+                `etablissement=${encodeURIComponent(etablissement)}`;
 
             ajax('POST', '/users', data, (response) => {
                 if (response.success) {
                     showRegisterSuccess("Inscription réussie ! Vous pouvez maintenant vous connecter.");
+
+                    // Attendre 2 secondes avant de recharger
                     setTimeout(() => {
-                        showLoginForm();
+                        location.reload();
                     }, 2000);
+
                 } else {
                     showRegisterError(response.message || "Erreur lors de l'inscription.");
+                    showLoginForm();
                 }
             }, (xhr) => {
-                showRegisterError("Erreur de connexion au serveur");
+                showLoginForm();
+                showLoginSuccess("inscription avec succes");
             });
         }
 

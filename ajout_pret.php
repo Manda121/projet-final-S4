@@ -1,9 +1,9 @@
 <?php
+session_start();
 $pageTitle = 'Ajouter un Prêt';
 $activeMenu = 'ajout_pret';
 ob_start();
 
-$_SESSION['id_user'] = 3;
 ?>
 
 <!DOCTYPE html>

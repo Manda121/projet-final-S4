@@ -73,7 +73,7 @@ function Header()
         $this->SetTextColor(120, 120, 120);
         $this->Ln(2);
         $this->Cell(0, 4, '' . $this->bankName, 0, 1, 'L');
-        $this->Cell(0, 4, 'ETU003280 ETU003299 ETU003233');
+        $this->Cell(0, 4, 'ETU003280 ETU003299 ETU003313');
         $this->Cell(0, 4, 'Page ' . $this->PageNo(), 0, 0, 'R');
     }
     

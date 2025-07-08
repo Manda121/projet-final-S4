@@ -28,35 +28,77 @@ class UserManda
 
     public function getByEmail($email)
     {
-        $stmt = $this->db->prepare("SELECT * FROM finance_s4_user WHERE email = ?");
+        $stmt = $this->db->prepare("SELECT u.*, eu.id_etablissement
+                FROM finance_s4_user u
+                LEFT JOIN finance_s4_etablissement_user eu ON u.id_user = eu.id_user
+                WHERE u.email = ?");
         $stmt->execute([$email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function create($data)
     {
-        // Vérifier si l'email existe déjà
-        if ($this->getByEmail($data['email'])) {
+        try {
+            // Vérifier si l'email existe déjà
+            if ($this->getByEmail($data['email'])) {
+                return [
+                    'success' => false,
+                    'message' => 'Cette adresse email est déjà utilisée'
+                ];
+            }
+
+            // Validate etablissement
+            if (empty($data['etablissement'])) {
+                return [
+                    'success' => false,
+                    'message' => 'Un établissement doit être sélectionné'
+                ];
+            }
+
+            // Hash the password
+            $hashedPassword = $data['mot_de_passe'];
+
+            // Start a transaction
+            $this->db->beginTransaction();
+
+            // Insert into finance_s4_user
+            $stmt = $this->db->prepare("
+                INSERT INTO finance_s4_user (nom, prenom, email, date_de_naissance, mot_de_passe, role_user)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ");
+            $stmt->execute([
+                $data['nom'],
+                $data['prenom'],
+                $data['email'],
+                $data['date_de_naissance'],
+                $hashedPassword,
+                $data['role_user'] ?? 'client'
+            ]);
+            $id_user = $this->db->lastInsertId();
+
+            // Insert into finance_s4_etablissement_user
+            $stmt = $this->db->prepare("
+                INSERT INTO finance_s4_etablissement_user (id_user, id_etablissement)
+                VALUES (?, ?)
+            ");
+            $stmt->execute([$id_user, $data['etablissement']]);
+
+            // Commit the transaction
+            $this->db->commit();
+
+            return [
+                'success' => true,
+                'id' => $id_user,
+                'message' => 'Utilisateur créé avec succès'
+            ];
+        } catch (\PDOException $e) {
+            // Roll back the transaction on error
+            $this->db->rollBack();
             return [
                 'success' => false,
-                'message' => 'Cette adresse email est déjà utilisée'
+                'message' => 'Erreur lors de la création: ' . $e->getMessage()
             ];
         }
-
-        $stmt = $this->db->prepare("INSERT INTO finance_s4_user (nom, prenom, email, date_de_naissance, mot_de_passe, role_user) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $data['nom'],
-            $data['prenom'],
-            $data['email'],
-            $data['date_de_naissance'],
-            $data['mot_de_passe'],
-            $data['role_user'] ?? 'client' // Par défaut 'client' si non spécifié
-        ]);
-        return [
-            'success' => true,
-            'id' => $this->db->lastInsertId(),
-            'message' => 'Utilisateur créé avec succès'
-        ];
     }
 
     public function update($id, $data)
@@ -121,4 +163,16 @@ class UserManda
             'message' => 'Authentification réussie'
         ];
     }
+
+    public function getEtablissements()
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM finance_s4_etablissement");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            return ['success' => false, 'message' => 'Erreur lors de la récupération des établissements: ' . $e->getMessage()];
+        }
+    }
+
 }

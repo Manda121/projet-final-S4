@@ -1,4 +1,5 @@
 <?php
+session_start();
 $pageTitle = 'Interet mensuel';
 $activeMenu = 'interet_mensuel';
 ob_start();
