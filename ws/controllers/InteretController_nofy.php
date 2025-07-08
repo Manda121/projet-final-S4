@@ -16,7 +16,11 @@ class InteretController_nofy {
         $reponse=$this->model->getTotalPretEtInteret($id, $data['debut'], $data['fin']);        
         Flight::json(['datas'=>$reponse]);
     }
-
+    public function filtreMontant($id) {
+        $data = Flight::request()->data->getData();
+        $reponse=$this->model->getMontantDisponibleParMois($id, $data['date_debut'], $data['date_fin']);        
+        Flight::json(['datas'=>$reponse]);
+    }
     
 
     

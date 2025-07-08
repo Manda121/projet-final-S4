@@ -306,6 +306,10 @@ $activeMenu = isset($activeMenu) ? $activeMenu : 'accueil';
                 <span class="menu-icon">📈</span>
                 <span class="menu-text">Intérêt mensuel</span>
             </a>
+            <a href="montant_nofy.php" class="menu-item <?php echo $activeMenu === 'montant_nofy' ? 'active' : ''; ?>">
+                <span class="menu-icon">📈</span>
+                <span class="menu-text">Montant total mensuel</span>
+            </a>
             <div style="margin-top: 50px; border-top: 1px solid #34495e; padding-top: 20px;">
                 <a href="logout.php" class="menu-item">
                     <span class="menu-icon">🚪</span>
