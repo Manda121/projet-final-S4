@@ -8,6 +8,11 @@ ob_start();
   <h1>Gestion des Remboursements</h1>
   <p>Suivez et enregistrez les remboursements pour les prêts validés.</p>
   <link rel="stylesheet" href="remboursement.css">
+  <style>
+    th {
+        /* color : black;   */
+    }
+  </style>
 </header>
 
 <div class="form-container">
@@ -56,6 +61,7 @@ ob_start();
         <span class="detail-label">Reste à Payer :</span>
         <span class="detail-value remaining" id="remaining">-</span>
       </div>
+      <button class="btn" onclick="saveSimulation()">Enregistrer Simulation</button>
     </div>
 
     <!-- Formulaire de paiement -->
@@ -108,6 +114,99 @@ ob_start();
     </div>
   </div>
 </div>
+
+<div class="form-container">
+  <h2>Comparer les Simulations</h2>
+  <div class="table-container">
+    <table id="simulations-table">
+      <thead>
+        <tr>
+          <th>Sélection</th>
+          <th>ID Simulation</th>
+          <th>ID Prêt</th>
+          <th>Montant</th>
+          <th>Taux Annuel</th>
+          <th>Date Prêt</th>
+          <th>Date Limite</th>
+          <th>Créée le</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button class="btn" onclick="compareSimulations()" disabled id="compare-btn">Comparer</button>
+  </div>
+</div>
+
+<div id="comparison-result" class="comparison-container">
+  <h2>Comparaison des Simulations</h2>
+  <div class="comparison-tables">
+    <div class="comparison-table" id="comparison-1">
+      <h3>Simulation 1</h3>
+      <table id="comparison-table-1">
+        <thead>
+          <tr>
+            <th>Mois</th>
+            <th>Capital Restant</th>
+            <th>Intérêt</th>
+            <th>Capital Remboursé</th>
+            <th>Annuité</th>
+            <th>Date de Paiement</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="comparison-table" id="comparison-2">
+      <h3>Simulation 2</h3>
+      <table id="comparison-table-2">
+        <thead>
+          <tr>
+            <th>Mois</th>
+            <th>Capital Restant</th>
+            <th>Intérêt</th>
+            <th>Capital Remboursé</th>
+            <th>Annuité</th>
+            <th>Date de Paiement</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<style>
+  .comparison-container {
+    margin-top: 20px;
+    display: none;
+  }
+  .comparison-container.show {
+    display: block;
+  }
+  .comparison-tables {
+    display: flex;
+    justify-content: space-between;
+  }
+  .comparison-table {
+    width: 48%;
+  }
+  .comparison-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .comparison-table th, .comparison-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: right;
+  }
+  .comparison-table th {
+    background-color: #f2f2f2;
+  }
+  #compare-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+  }
+</style>
 
 <script>
   const apiBase = "http://localhost/projet-final-S4/ws";
@@ -229,52 +328,114 @@ ob_start();
     }
   }
 
-  function recordPayment() {
+  function saveSimulation() {
     const id_pret = document.getElementById("pret_select").value;
-    const montant = parseFloat(document.getElementById("payment_amount").value);
-    const date_remise = document.getElementById("payment_date").value;
-    const errorMessage = document.getElementById("error-message");
-    const remainingText = document.getElementById("remaining").textContent;
-    const remaining = parseFloat(remainingText.replace(" Ar", ""));
-
-    // Condition d'arrêt : vérifier si le prêt est déjà remboursé
-    if (remaining <= 0) {
-      errorMessage.classList.add('show');
-      errorMessage.textContent = "Ce prêt est déjà entièrement remboursé.";
+    if (!id_pret) {
+      alert("Veuillez sélectionner un prêt.");
       return;
     }
-
-    // Vérification des champs
-    if (!id_pret || !montant || !date_remise) {
-      errorMessage.classList.add('show');
-      errorMessage.textContent = "Veuillez remplir tous les champs du paiement.";
-      return;
-    }
-
-    // Vérifier si le paiement excède le reste à payer
-    if (montant > remaining) {
-      errorMessage.classList.add('show');
-      errorMessage.textContent = `Le montant du paiement (${montant.toFixed(2)} Ar) ne peut pas dépasser le reste à payer (${remaining.toFixed(2)} Ar).`;
-      return;
-    }
-
-    const data = `id_pret=${encodeURIComponent(id_pret)}&montant=${encodeURIComponent(montant)}&date_remise=${encodeURIComponent(date_remise)}`;
-    ajax("POST", "/remboursement-payment", data, (response) => {
-      if (response.success) {
-        errorMessage.classList.remove('show');
+    ajax("POST", "/save-simulation", `id_pret=${encodeURIComponent(id_pret)}`, (response) => {
+      if (response.id_simulation) {
         alert(response.message);
-        document.getElementById("payment_amount").value = '';
-        document.getElementById("payment_date").value = '';
-        chargerSimulation();
+        chargerSimulations();
       } else {
-        errorMessage.classList.add('show');
-        errorMessage.textContent = response.message;
+        alert(response.message || "Erreur lors de l'enregistrement de la simulation.");
+      }
+    });
+  }
+
+  function chargerSimulations() {
+    ajax("GET", "/simulations", null, (data) => {
+      const tbody = document.getElementById("simulations-table").getElementsByTagName('tbody')[0];
+      tbody.innerHTML = '';
+      if (Array.isArray(data)) {
+        data.forEach(simulation => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><input type="checkbox" class="simulation-checkbox" data-id="${simulation.id_simulation}" onchange="toggleCompareButton()"></td>
+            <td>${simulation.id_simulation}</td>
+            <td>${simulation.id_pret}</td>
+            <td>${parseFloat(simulation.montant).toFixed(2)} Ar</td>
+            <td>${parseFloat(simulation.taux_annuel).toFixed(2)}%</td>
+            <td>${simulation.date_pret}</td>
+            <td>${simulation.date_limite}</td>
+            <td>${simulation.created_at}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    });
+  }
+
+  function toggleCompareButton() {
+    const checkboxes = document.querySelectorAll(".simulation-checkbox:checked");
+    const compareBtn = document.getElementById("compare-btn");
+    compareBtn.disabled = checkboxes.length !== 2;
+  }
+
+  function compareSimulations() {
+    const checkboxes = document.querySelectorAll(".simulation-checkbox:checked");
+    if (checkboxes.length !== 2) {
+      alert("Veuillez sélectionner exactement deux simulations à comparer.");
+      return;
+    }
+
+    const id1 = checkboxes[0].dataset.id;
+    const id2 = checkboxes[1].dataset.id;
+    ajax("GET", "/simulations", null, (data) => {
+      const simulation1 = data.find(s => s.id_simulation == id1);
+      const simulation2 = data.find(s => s.id_simulation == id2);
+      if (simulation1 && simulation2) {
+        // Afficher détails Simulation 1
+        const header1 = document.querySelector("#comparison-1 h3");
+        const header2 = document.querySelector("#comparison-2 h3");
+        if (!header1 || !header2) {
+          alert("Erreur: Impossible de trouver les éléments d'affichage pour la comparaison.");
+          return;
+        }
+        header1.textContent = `Simulation #${simulation1.id_simulation} (Prêt #${simulation1.id_pret})`;
+        const tbody1 = document.getElementById("comparison-table-1").getElementsByTagName('tbody')[0];
+        tbody1.innerHTML = '';
+        simulation1.echeancier.forEach(row => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${row.mois}</td>
+            <td>${parseFloat(row.capital_restant).toFixed(2)} Ar</td>
+            <td>${parseFloat(row.interet).toFixed(2)} Ar</td>
+            <td>${parseFloat(row.capital_rembourse).toFixed(2)} Ar</td>
+            <td>${parseFloat(row.annuite).toFixed(2)} Ar</td>
+            <td>${row.date_paiement}</td>
+          `;
+          tbody1.appendChild(tr);
+        });
+
+        // Afficher détails Simulation 2
+        header2.textContent = `Simulation #${simulation2.id_simulation} (Prêt #${simulation2.id_pret})`;
+        const tbody2 = document.getElementById("comparison-table-2").getElementsByTagName('tbody')[0];
+        tbody2.innerHTML = '';
+        simulation2.echeancier.forEach(row => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${row.mois}</td>
+            <td>${parseFloat(row.capital_restant).toFixed(2)} Ar</td>
+            <td>${parseFloat(row.interet).toFixed(2)} Ar</td>
+            <td>${parseFloat(row.capital_rembourse).toFixed(2)} Ar</td>
+            <td>${parseFloat(row.annuite).toFixed(2)} Ar</td>
+            <td>${row.date_paiement}</td>
+          `;
+          tbody2.appendChild(tr);
+        });
+
+        document.getElementById("comparison-result").classList.add('show');
+      } else {
+        alert("Erreur lors de la récupération des simulations.");
       }
     });
   }
 
   window.onload = () => {
     chargerPretsValides();
+    chargerSimulations();
   };
 </script>
 

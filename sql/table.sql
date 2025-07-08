@@ -71,6 +71,30 @@ create table finance_s4_remise(
     foreign key (id_pret) references finance_s4_pret(id_pret)
 );
 
+
+CREATE TABLE finance_s4_simulation (
+    id_simulation INT AUTO_INCREMENT PRIMARY KEY,
+    id_pret INT,
+    montant NUMERIC DEFAULT 0,
+    taux_annuel NUMERIC DEFAULT 0,
+    date_pret DATE,
+    date_limite DATE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_pret) REFERENCES finance_s4_pret(id_pret)
+);
+
+CREATE TABLE finance_s4_simulation_echeancier (
+    id_echeancier INT AUTO_INCREMENT PRIMARY KEY,
+    id_simulation INT,
+    mois INT,
+    capital_restant NUMERIC DEFAULT 0,
+    interet NUMERIC DEFAULT 0,
+    capital_rembourse NUMERIC DEFAULT 0,
+    annuite NUMERIC DEFAULT 0,
+    date_paiement DATE,
+    FOREIGN KEY (id_simulation) REFERENCES finance_s4_simulation(id_simulation)
+);
+
 ALTER TABLE finance_s4_fond MODIFY COLUMN montant numeric DEFAULT 0;
 
 ALTER TABLE finance_s4_type_pret MODIFY COLUMN montant_min numeric DEFAULT 0;

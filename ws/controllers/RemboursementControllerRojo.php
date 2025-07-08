@@ -52,4 +52,50 @@ class RemboursementControllerRojo {
             Flight::json(['message' => 'Échec de l\'enregistrement du paiement.'], 500);
         }
     }
+
+    public function saveSimulation() {
+        $id_pret = Flight::request()->data->id_pret;
+        if (!$id_pret) {
+            Flight::json(['message' => 'ID du prêt requis.'], 400);
+            return;
+        }
+
+        try {
+            $pret = $this->model->getPretDetailsForSimulation($id_pret);
+            if ($pret) {
+                $echeancier = $this->model->generateEcheancier(
+                    $pret['id_pret'],
+                    $pret['montant'],
+                    $pret['taux_annuel'],
+                    $pret['date_pret'],
+                    $pret['date_limite']
+                );
+                $result = $this->model->saveSimulation(
+                    $pret['id_pret'],
+                    $pret['montant'],
+                    $pret['taux_annuel'],
+                    $pret['date_pret'],
+                    $pret['date_limite'],
+                    $echeancier
+                );
+                Flight::json($result);
+            } else {
+                Flight::json(['message' => 'Prêt non trouvé ou non validé.'], 404);
+            }
+        } catch (PDOException $e) {
+            error_log("Erreur dans saveSimulation: " . $e->getMessage());
+            Flight::json(['message' => 'Échec de l\'enregistrement de la simulation.'], 500);
+        }
+    }
+
+    public function getSimulations() {
+        try {
+            $simulations = $this->model->getSimulations();
+            Flight::json($simulations);
+        } catch (PDOException $e) {
+            error_log("Erreur dans getSimulations: " . $e->getMessage());
+            Flight::json(['message' => 'Échec de la récupération des simulations.'], 500);
+        }
+    }
 }
+?>

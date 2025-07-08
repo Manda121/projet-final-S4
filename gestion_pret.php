@@ -1,4 +1,5 @@
 <?php
+session_start();
 $pageTitle = 'Gestion des Prêts en Attente';
 $activeMenu = 'gestion_pret';
 ob_start();

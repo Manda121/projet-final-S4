@@ -96,7 +96,7 @@ ob_start();
                 <th>Taux (%)</th>
                 <th>Date Prêt</th>
                 <th>Date Limite</th>
-                <th>État</th>
+                <th>action</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -168,7 +168,7 @@ ob_start();
             <td>${pret.taux}</td>
             <td>${pret.date_pret}</td>
             <td>${pret.date_limite}</td>
-            <td>${pret.etat}</td>
+            <td>voir detail</td>
         `;
                     tbody.appendChild(tr);
                 });
