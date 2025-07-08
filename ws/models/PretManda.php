@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use PDO;
@@ -30,7 +31,7 @@ class PretManda
         JOIN finance_s4_taux t ON p.id_taux = t.id_taux
         JOIN finance_s4_type_pret tp ON t.id_type_pret = tp.id_type_pret
         WHERE tp.id_etablissement = :id_etablissement";
-        
+
         $params = [':id_etablissement' => $id_etablissement];
 
         if (!empty($filters['client'])) {
@@ -74,23 +75,26 @@ class PretManda
         $id_etablissement = $_SESSION["id_etablissement"];
         // Fetch loan details
         $query = "SELECT 
-            p.id_pret,
-            c.nom AS client_nom,
-            c.prenom AS client_prenom,
-            tp.libelle AS type_pret_libelle,
-            p.montant,
-            p.taux_assurance,
-            p.date_pret,
-            p.date_limite,
-            p.etat,
-            p.description,
-            t.taux
-        FROM finance_s4_pret p
-        JOIN finance_s4_user c ON p.id_user = c.id_user
-        JOIN finance_s4_taux t ON p.id_taux = t.id_taux
-        JOIN finance_s4_type_pret tp ON t.id_type_pret = tp.id_type_pret
-        WHERE p.id_pret = :id_pret AND tp.id_etablissement = :id_etablissement";
-        
+    p.id_pret,
+    c.nom AS client_nom,
+    c.prenom AS client_prenom,
+    c.id_user AS id_client,
+    tp.libelle AS type_pret_libelle,
+    p.montant,
+    p.taux_assurance,
+    p.date_pret,
+    p.date_limite,
+    p.etat,
+    p.description,
+    t.taux,
+    e.nom AS etablissement_nom
+FROM finance_s4_pret p
+JOIN finance_s4_user c ON p.id_user = c.id_user
+JOIN finance_s4_taux t ON p.id_taux = t.id_taux
+JOIN finance_s4_type_pret tp ON t.id_type_pret = tp.id_type_pret
+JOIN finance_s4_etablissement e ON tp.id_etablissement = e.id_etablissement
+WHERE p.id_pret = :id_pret AND tp.id_etablissement = :id_etablissement";
+
         $stmt = $this->db->prepare($query);
         $stmt->execute([':id_pret' => $id_pret, ':id_etablissement' => $id_etablissement]);
         $pret = $stmt->fetch(PDO::FETCH_ASSOC);

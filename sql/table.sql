@@ -21,7 +21,7 @@ create table finance_s4_user(
     email VARCHAR(100),
     date_de_naissance date,
     mot_de_passe VARCHAR(100),
-    role_user ENUM('finance', 'client')
+    role_user ENUM('finance', 'client') 
 );
 
 create table finance_s4_etablissement_user(
