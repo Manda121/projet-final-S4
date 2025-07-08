@@ -8,6 +8,8 @@ require 'routes/etudiantRoutes.php';
 require 'routes/TypesPretRouteManda.php';
 require 'routes/UserRouteManda.php';
 require 'routes/PretRouteManda.php';
+require 'routes/etudiantRoutes.php';
+require 'routes/PretRoutesRojo.php';
 
 Flight::route('GET /etudiantsvv', function() {
     $db = getDB();

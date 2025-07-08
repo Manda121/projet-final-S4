@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestion de Prets d'etablissement</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f7fa;
+      margin: 0;
+      padding: 40px 20px;
+      color: #2c3e50;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      text-align: center;
+      color: #2c3e50;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: #7f8c8d;
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 50px;
+    }
+
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 40px 30px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border: 2px solid transparent;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+      border-color: #3498db;
+    }
+
+    .card-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+      font-size: 2.5rem;
+      color: white;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-icon {
+      transform: scale(1.1);
+    }
+
+    .card-icon.pret {
+      background: linear-gradient(135deg, #3498db, #2980b9);
+    }
+
+    .card-icon.validation {
+      background: linear-gradient(135deg, #27ae60, #229954);
+    }
+
+    .card-icon.client {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+    }
+
+    .card-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+
+    .card-description {
+      color: #7f8c8d;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .card-arrow {
+      color: #3498db;
+      font-size: 1.2rem;
+      margin-top: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-arrow {
+      transform: translateX(5px);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px 10px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .cards-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .card {
+        padding: 30px 20px;
+      }
+
+      .card-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 2rem;
+      }
+
+      .card-title {
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 20px 10px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .card {
+        padding: 25px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Gestion de prets d'etablissement</h1>
+    <p class="subtitle">Système de gestion des prêts et des clients</p>
+    
+    <div class="cards-container">
+      <a href="ajout_pret.php" class="card">
+        <div class="card-icon pret">
+          💰
+        </div>
+        <h3 class="card-title">Faire un Prêt</h3>
+        <p class="card-description">
+          Créez et configurez de nouveaux prêts pour vos clients avec toutes les informations nécessaires.
+        </p>
+        <div class="card-arrow">→</div>
+      </a>
+
+      <a href="gestion_pret.php" class="card">
+        <div class="card-icon validation">
+          ✅
+        </div>
+        <h3 class="card-title">Validation de Prêt</h3>
+        <p class="card-description">
+          Examinez, validez ou refusez les demandes de prêts en attente de traitement.
+        </p>
+        <div class="card-arrow">→</div>
+      </a>
+
+      <a href="ajout_client.php" class="card">
+        <div class="card-icon client">
+          👤
+        </div>
+        <h3 class="card-title">Ajouter un Client</h3>
+        <p class="card-description">
+          Enregistrez de nouveaux clients dans le système avec leurs informations personnelles.
+        </p>
+        <div class="card-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

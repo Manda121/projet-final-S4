@@ -187,7 +187,7 @@
 
             ajax('POST', '/users/login', `email=${encodeURIComponent(email)}&mot_de_passe=${encodeURIComponent(password)}`, (response) => {
                 if (response.success) {
-                    window.location.href = 'index.html';
+                    window.location.href = 'home.html';
                 } else {
                     const errorElement = document.getElementById('login-error');
                     errorElement.textContent = "response.success";
@@ -229,7 +229,7 @@
             // console.log(data);
 
             ajax('POST', '/users', data, (response) => {
-                if (response.id) {
+                if (response.success) {
                     showLoginForm();
                     // afficherSucces("Inscription réussie ! Vous pouvez maintenant vous connecter.");
                 } else {
