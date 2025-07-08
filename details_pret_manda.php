@@ -1,7 +1,10 @@
 <?php
-session_start();
 $_SESSION["id_user"] = 1;
 $_SESSION["id_etablissement"] = 1;
+
+$pageTitle = 'Details pret';
+$activeMenu = 'details_pret_manda';
+ob_start();
 
 // Check if id_pret is provided
 if (!isset($_GET['id_pret']) || !is_numeric($_GET['id_pret'])) {
@@ -272,3 +275,9 @@ if (!isset($_GET['id_pret']) || !is_numeric($_GET['id_pret'])) {
 </body>
 
 </html>
+
+
+<?php
+$pageContent = ob_get_clean();
+require 'template.php';
+?>

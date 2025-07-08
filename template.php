@@ -26,7 +26,7 @@ $activeMenu = isset($activeMenu) ? $activeMenu : 'accueil';
       <p>Système de gestion</p>
     </div>
     <nav class="menu-list">
-      <a href="index.html" class="menu-item <?php echo $activeMenu === 'accueil' ? 'active' : ''; ?>">
+      <a href="home.html" class="menu-item <?php echo $activeMenu === 'accueil' ? 'active' : ''; ?>">
         <span class="menu-icon">🏠</span>
         <span class="menu-text">Accueil</span>
       </a>
@@ -42,9 +42,25 @@ $activeMenu = isset($activeMenu) ? $activeMenu : 'accueil';
         <span class="menu-icon">👤</span>
         <span class="menu-text">Ajouter un Client</span>
       </a>
+      <a href="create_type_pret_manda.php" class="menu-item <?php echo $activeMenu === 'create_type_pret_manda' ? 'active' : ''; ?>">
+        <span class="menu-icon">💸</span>
+        <span class="menu-text">Creer un type pret</span>
+      </a>
+      <a href="liste_prets_manda.php" class="menu-item <?php echo $activeMenu === 'liste_prets_manda' ? 'active' : ''; ?>">
+        <span class="menu-icon">💸</span>
+        <span class="menu-text">liste Pret</span>
+      </a>
       <a href="remboursement.php" class="menu-item <?php echo $activeMenu === 'remboursement' ? 'active' : ''; ?>">
         <span class="menu-icon">💸</span>
         <span class="menu-text">Remboursement</span>
+      </a>
+      <a href="fond_nofy.php" class="menu-item <?php echo $activeMenu === 'ajout_fond' ? 'active' : ''; ?>">
+        <span class="menu-icon">💸</span>
+        <span class="menu-text">ajouter un fond</span>
+      </a>
+      <a href="interet_mensuel_nofy.php" class="menu-item <?php echo $activeMenu === 'interet_mensuel' ? 'active' : ''; ?>">
+        <span class="menu-icon">💸</span>
+        <span class="menu-text">Interet mensuel</span>
       </a>
       <div style="margin-top: 50px; border-top: 1px solid #34495e; padding-top: 20px;">
         <a href="logout.php" class="menu-item">

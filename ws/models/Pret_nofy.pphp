@@ -1,0 +1,188 @@
+<?php
+namespace App;
+
+use PDO;
+
+class Pret_nofy {
+    private $db;
+
+    public function __construct(PDO $db) {
+        $this->db = $db;
+    }
+
+
+/**
+ * Simule un prêt déjà validé à partir de ses données
+ * @param array $pret Données du prêt validé (doit contenir les champs nécessaires)
+ * @return array Résultats de simulation
+ */
+public function simulerPretValideParId(int $idPret): array {
+    // 1. Récupération complète des données du prêt validé
+  $stmt = $this->db->prepare("
+    SELECT 
+        p.id_pret,
+        p.montant,
+        p.taux_assurance,
+        p.date_pret,
+        p.date_limite,
+        p.description,
+        t.taux AS taux_annuel,
+        tp.libelle AS type_pret,
+        u.nom AS client_nom,
+        u.prenom AS client_prenom,
+        TIMESTAMPDIFF(MONTH, p.date_pret, p.date_limite) AS duree_mois,
+        (SELECT COUNT(*) FROM finance_s4_remise r WHERE r.id_pret = p.id_pret) AS remises_effectuees
+    FROM finance_s4_pret p
+    JOIN finance_s4_taux t ON p.id_taux = t.id_taux
+    JOIN finance_s4_type_pret tp ON t.id_type_pret = tp.id_type_pret
+    JOIN finance_s4_user u ON p.id_user = u.id_user
+    WHERE p.id_pret = ? 
+    AND p.etat = 'validee'
+");
+$stmt->execute([$idPret]); // Bind and execute safely
+$pret = $stmt->fetch();   // Fetch the result
+
+    // 2. Vérification complète du prêt
+    if (!$pret) {
+        throw new Exception("Aucun prêt validé trouvé avec l'ID $idPret");
+    }
+
+    // 3. Calcul du capital restant dû (en tenant compte des remises existantes)
+    $capitalRestant = $this->calculerCapitalRestant($idPret);
+
+    // 4. Simulation avec les paramètres actuels
+    $simulation = $this->simulerPret(
+        (float)$capitalRestant,  // On utilise le capital restant plutôt que le montant initial
+        (float)$pret['taux_annuel'],
+        (float)$pret['taux_assurance'],
+        (int)$pret['duree_mois'] - (int)$pret['remises_effectuees']  // Durée restante
+    );
+
+    // 5. Enrichissement des résultats
+    return [
+        'infos_pret' => [
+            'id' => $pret['id_pret'],
+            'client' => $pret['client_nom'] . ' ' . $pret['client_prenom'],
+            'type' => $pret['type_pret'],
+            'description' => $pret['description'],
+            'date_debut' => $pret['date_pret'],
+            'date_fin' => $pret['date_limite']
+        ],
+        'simulation' => $simulation,
+        'statut' => [
+            'montant_initial' => (float)$pret['montant'],
+            'capital_restant' => $capitalRestant,
+            'remises_effectuees' => (int)$pret['remises_effectuees'],
+            'echeances_restantes' => (int)$pret['duree_mois'] - (int)$pret['remises_effectuees']
+        ]
+    ];
+}
+
+private function calculerCapitalRestant(int $idPret): float {
+    // 1. Calculate total repayments made
+    $stmtRemises = $this->db->prepare("
+        SELECT SUM(montant) AS total_rembourse
+        FROM finance_s4_remise
+        WHERE id_pret = ?
+    ");
+    $stmtRemises->execute([$idPret]);
+    $remises = $stmtRemises->fetch();
+
+    // 2. Get original loan amount
+    $stmtPret = $this->db->prepare("
+        SELECT montant 
+        FROM finance_s4_pret 
+        WHERE id_pret = ?
+    ");
+    $stmtPret->execute([$idPret]);
+    $pret = $stmtPret->fetch();
+
+    // 3. Validate data exists
+    if (!$pret || !isset($pret['montant'])) {
+        throw new Exception("Prêt introuvable avec l'ID $idPret");
+    }
+
+    // 4. Calculate remaining capital
+    $totalRembourse = (float)($remises['total_rembourse'] ?? 0);
+    $montantInitial = (float)$pret['montant'];
+
+    // Prevent negative values
+    return max(0, $montantInitial - $totalRembourse);
+}
+
+public function simulerPret(float $capital, float $taux, int $dureeMois, float $tauxAssurance): array {
+    $tauxMensuel = ($taux / 100) / 12;
+    $mensualite = $capital * ($tauxMensuel * pow(1 + $tauxMensuel, $dureeMois)) / (pow(1 + $tauxMensuel, $dureeMois) - 1);
+    $assurance = ($capital * $tauxAssurance / 100) / 12;
+    
+    return [
+        'mensualite' => round($mensualite, 2),
+        'assurance_mensuelle' => round($assurance, 2),
+        'total_mensualite' => round($mensualite + $assurance, 2)
+    ];
+}
+
+// Exemple :
+$simulation = simulerPret(100000, 4, 240, 0.3);
+print_r($simulation);
+
+    public function getValiderPret() {
+    try {
+        // 1. Connexion et préparation de la requête
+        $query = $this->db->prepare("
+            SELECT 
+                p.id_pret,
+                p.montant,
+                p.date_pret,
+                p.date_limite,
+                p.taux_assurance,
+                p.etat,
+                u.nom AS client_nom,
+                u.prenom AS client_prenom,
+                tp.libelle AS type_pret,
+                t.taux AS taux_interet,
+                e.nom AS etablissement_nom
+            FROM finance_s4_pret p
+            JOIN finance_s4_user u ON p.id_user = u.id_user
+            JOIN finance_s4_taux t ON p.id_taux = t.id_taux
+            JOIN finance_s4_type_pret tp ON t.id_type_pret = tp.id_type_pret
+            JOIN finance_s4_etablissement e ON tp.id_etablissement = e.id_etablissement
+            WHERE p.etat = 'validee'
+            ORDER BY p.date_pret DESC
+        ");
+
+        // 2. Exécution avec gestion d'erreur explicite
+        if (!$query->execute()) {
+            $error = $query->errorInfo();
+            throw new Exception("Erreur SQL: " . $error[2]);
+        }
+
+        // 3. Récupération des résultats
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        // 4. Calcul de la mensualité pour chaque prêt
+        foreach ($results as &$pret) {
+            $tauxMensuel = ($pret['taux_interet'] / 100) / 12;
+            $dureeMois = (strtotime($pret['date_limite']) - strtotime($pret['date_pret'])) / (60 * 60 * 24 * 30);
+            $pret['mensualite'] = round(
+                $pret['montant'] * $tauxMensuel * pow(1 + $tauxMensuel, $dureeMois) / 
+                (pow(1 + $tauxMensuel, $dureeMois) - 1) + 
+                ($pret['montant'] * $pret['taux_assurance'] / 1200),
+                2
+            );
+        }
+
+        return $results;
+
+    } catch (Exception $e) {
+        // Journalisation de l'erreur
+        error_log("Erreur dans getValiderPret(): " . $e->getMessage());
+        
+        // Retourner un tableau vide en production
+        return [];
+        
+        // Ou décommenter pour le débogage :
+        // return ['error' => $e->getMessage()];
+    }
+}
+}

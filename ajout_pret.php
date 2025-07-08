@@ -1,27 +1,26 @@
 <?php
-session_start();
-$_SESSION['id_user'] = 1;
-
 $pageTitle = 'Ajouter un Prêt';
 $activeMenu = 'ajout_pret';
 ob_start();
 
+$_SESSION['id_user'] = 3;
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ajouter un Prêt</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <!-- Menu mobile toggle -->
-  <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+  <!-- <button class="mobile-menu-toggle" onclick="toggleSidebar()">
     ☰
-  </button>
+  </button> -->
 
-  <!-- Menu latéral -->
+  <!-- Menu latéral
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <h2>Gestion Prêts</h2>
@@ -55,10 +54,10 @@ ob_start();
         </a>
       </div>
     </nav>
-  </div>
+  </div> -->
 
   <!-- Contenu principal -->
-  <div class="main-content">
+  <div class="main-content" style="margin-left: -5%; width: 90%">
     <div class="container">
       <header class="content-header">
         <h1>Gestion des Prêts</h1>
@@ -317,3 +316,9 @@ ob_start();
   </script>
 </body>
 </html>
+
+
+<?php
+$pageContent = ob_get_clean();
+require 'template.php';
+?>

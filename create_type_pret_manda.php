@@ -1,7 +1,10 @@
 <?php
-session_start();
 $_SESSION["id_user"] = 1;
 $_SESSION["id_etablissement"] = 1;
+
+$pageTitle = 'creation type de pret';
+$activeMenu = 'create_type_pret_manda';
+ob_start();
 ?>
 
 <!DOCTYPE html>
@@ -194,3 +197,8 @@ chargerTypePret();
 </body>
 
 </html>
+
+<?php
+$pageContent = ob_get_clean();
+require 'template.php';
+?>

@@ -1,11 +1,15 @@
 <?php
-session_start();
 $_SESSION["id_user"] = 1;
 $_SESSION["id_etablissement"] = 1;
+
+$pageTitle = 'Liste Pret';
+$activeMenu = 'liste_prets_manda';
+ob_start();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,28 +19,37 @@ $_SESSION["id_etablissement"] = 1;
             font-family: sans-serif;
             padding: 20px;
         }
-        input, select, button {
+
+        input,
+        select,
+        button {
             margin: 5px;
             padding: 5px;
         }
+
         table {
             border-collapse: collapse;
             width: 100%;
             margin-top: 20px;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #ccc;
             padding: 8px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         .filter-form {
             margin-bottom: 20px;
         }
     </style>
 </head>
+
 <body>
     <div class="filter-form">
         <h2>Filtrer les Prêts</h2>
@@ -142,19 +155,27 @@ $_SESSION["id_etablissement"] = 1;
                 tbody.innerHTML = "";
                 data.forEach(pret => {
                     const tr = document.createElement("tr");
+
+                    // Ajouter un gestionnaire d'événement au clic
+                    tr.style.cursor = "pointer";
+                    tr.addEventListener("click", () => {
+                        window.location.href = `details_pret_manda.php?id_pret=${pret.id_pret}`;
+                    });
+
                     tr.innerHTML = `
-                        <td>${pret.id_pret}</td>
-                        <td>${pret.client_nom} ${pret.client_prenom}</td>
-                        <td>${pret.type_pret_libelle}</td>
-                        <td>${pret.montant}</td>
-                        <td>${pret.taux}</td>
-                        <td>${pret.date_pret}</td>
-                        <td>${pret.date_limite}</td>
-                        <td>${pret.etat}</td>
-                    `;
+            <td>${pret.id_pret}</td>
+            <td>${pret.client_nom} ${pret.client_prenom}</td>
+            <td>${pret.type_pret_libelle}</td>
+            <td>${pret.montant}</td>
+            <td>${pret.taux}</td>
+            <td>${pret.date_pret}</td>
+            <td>${pret.date_limite}</td>
+            <td>${pret.etat}</td>
+        `;
                     tbody.appendChild(tr);
                 });
             });
+
         }
 
         function resetFilters() {
@@ -167,4 +188,10 @@ $_SESSION["id_etablissement"] = 1;
         filtrerPrets();
     </script>
 </body>
+
 </html>
+
+<?php
+$pageContent = ob_get_clean();
+require 'template.php';
+?>
