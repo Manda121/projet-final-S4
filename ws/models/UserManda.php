@@ -175,4 +175,79 @@ class UserManda
         }
     }
 
+    public function getStats($id_etablissement = null)
+    {
+        try {
+            $params = $id_etablissement ? [$id_etablissement] : [];
+            $etablissement_condition = $id_etablissement ? 'AND tp.id_etablissement = ?' : '';
+
+            // Active Loans
+            $active_loans_query = "
+                SELECT COUNT(p.id_pret) AS active_loans
+                FROM finance_s4_pret p
+                JOIN finance_s4_taux t ON p.id_taux = t.id_taux
+                JOIN finance_s4_type_pret tp ON t.id_type_pret = tp.id_type_pret
+                WHERE p.etat = 'validee'
+                $etablissement_condition
+            ";
+            $stmt = $this->db->prepare($active_loans_query);
+            $stmt->execute($params);
+            $active_loans = $stmt->fetch(PDO::FETCH_ASSOC)['active_loans'];
+
+            // Repayment Rate
+            $repayment_rate_query = "
+                SELECT IFNULL(
+                    (SUM(r.montant) / NULLIF(SUM(p.montant), 0)) * 100,
+                    0
+                ) AS repayment_rate
+                FROM finance_s4_pret p
+                LEFT JOIN finance_s4_remise r ON p.id_pret = r.id_pret
+                JOIN finance_s4_taux t ON p.id_taux = t.id_taux
+                JOIN finance_s4_type_pret tp ON t.id_type_pret = tp.id_type_pret
+                WHERE p.etat = 'validee'
+                $etablissement_condition
+            ";
+            $stmt = $this->db->prepare($repayment_rate_query);
+            $stmt->execute($params);
+            $repayment_rate = round($stmt->fetch(PDO::FETCH_ASSOC)['repayment_rate'], 2);
+
+            // Active Clients
+            $active_clients_query = "
+                SELECT COUNT(DISTINCT p.id_user) AS active_clients
+                FROM finance_s4_pret p
+                JOIN finance_s4_taux t ON p.id_taux = t.id_taux
+                JOIN finance_s4_type_pret tp ON t.id_type_pret = tp.id_type_pret
+                WHERE p.etat = 'validee'
+                $etablissement_condition
+            ";
+            $stmt = $this->db->prepare($active_clients_query);
+            $stmt->execute($params);
+            $active_clients = $stmt->fetch(PDO::FETCH_ASSOC)['active_clients'];
+
+            // Available Funds
+            $funds_query = "
+                SELECT IFNULL(SUM(montant), 0) AS available_funds
+                FROM finance_s4_fond
+                " . ($id_etablissement ? 'WHERE id_etablissement = ?' : '');
+            $stmt = $this->db->prepare($funds_query);
+            $stmt->execute($params);
+            $available_funds = $stmt->fetch(PDO::FETCH_ASSOC)['available_funds'];
+
+            return [
+                'success' => true,
+                'data' => [
+                    'active_loans' => (int)$active_loans,
+                    'repayment_rate' => $repayment_rate,
+                    'active_clients' => (int)$active_clients,
+                    'available_funds' => (float)$available_funds
+                ]
+            ];
+        } catch (\PDOException $e) {
+            return [
+                'success' => false,
+                'message' => 'Erreur lors de la récupération des statistiques: ' . $e->getMessage()
+            ];
+        }
+    }
+
 }

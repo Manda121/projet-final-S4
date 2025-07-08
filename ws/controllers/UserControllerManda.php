@@ -93,4 +93,20 @@ class UserControllerManda
             Flight::json($result);
         }
     }
+
+    public function getStats()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $id_etablissement = $_SESSION['id_etablissement'] ?? null;
+        $result = $this->model->getStats($id_etablissement);
+
+        if ($result['success']) {
+            Flight::json($result['data']);
+        } else {
+            Flight::json(['success' => false, 'message' => $result['message']], 500);
+        }
+    }
 }

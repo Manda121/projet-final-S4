@@ -103,3 +103,6 @@ ALTER TABLE finance_s4_type_pret MODIFY COLUMN montant_max numeric DEFAULT 0;
 ALTER TABLE finance_s4_pret MODIFY COLUMN montant numeric DEFAULT 0;
 
 ALTER TABLE finance_s4_remise MODIFY COLUMN montant numeric DEFAULT 0;
+
+ALTER TABLE finance_s4_pret ADD delai_premier_remboursement INT NULL DEFAULT 0;
+ALTER TABLE finance_s4_remise MODIFY COLUMN montant numeric DEFAULT 0;

@@ -1,11 +1,12 @@
 <?php
 session_start();
 $pageTitle = 'Ajouter un fond';
-$activeMenu = 'ajout_fond';
+$activeMenu = 'home';
 ob_start();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,7 +29,7 @@ ob_start();
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background-color:rgb(75, 91, 162);
+            background-color: rgb(75, 91, 162);
         }
 
         .header {
@@ -42,11 +43,11 @@ ob_start();
             font-size: 3em;
             font-weight: 700;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .header p {
-            color:rgb(217, 255, 0);
+            color: rgb(217, 255, 0);
             font-size: 1.2em;
             opacity: 0.9;
         }
@@ -62,7 +63,7 @@ ob_start();
             background: white;
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -80,7 +81,7 @@ ob_start();
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
 
         .card-icon {
@@ -122,7 +123,7 @@ ob_start();
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
             transition: left 0.5s ease;
         }
 
@@ -132,16 +133,16 @@ ob_start();
 
         .card-link:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .stats-section {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 40px;
             margin-bottom: 40px;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .stats-grid {
@@ -171,7 +172,7 @@ ob_start();
             background: white;
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .quick-actions h2 {
@@ -223,7 +224,7 @@ ob_start();
         .action-btn:hover {
             transform: translateY(-3px);
             border-color: #ffd700;
-            box-shadow: 0 5px 15px rgba(255,215,0,0.3);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
         }
 
         .action-btn span {
@@ -235,33 +236,34 @@ ob_start();
             text-align: center;
             margin-top: 50px;
             padding: 30px;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
         }
 
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2em;
             }
-            
+
             .dashboard-grid {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-            
+
             .card {
                 padding: 20px;
             }
-            
+
             .stats-section {
                 padding: 20px;
             }
-            
+
             .quick-actions {
                 padding: 20px;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -269,27 +271,27 @@ ob_start();
             <h1>ETU003280 ETU003299 ETU3313</h1>
             <p>Système de gestion financière moderne et professionnel</p>
         </div>
-<!-- 
+
         <div class="stats-section">
             <div class="stats-grid">
                 <div class="stat-item">
-                    <div class="stat-number">247</div>
+                    <div class="stat-number">0</div>
                     <div class="stat-label">Prêts Actifs</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">89%</div>
+                    <div class="stat-number">0%</div>
                     <div class="stat-label">Taux de Remboursement</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">156</div>
+                    <div class="stat-number">0</div>
                     <div class="stat-label">Clients Actifs</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">2.4M</div>
+                    <div class="stat-number">0</div>
                     <div class="stat-label">Fonds Disponibles</div>
                 </div>
             </div>
-        </div> -->
+        </div>
 
         <div class="dashboard-grid">
             <div class="card">
@@ -361,7 +363,62 @@ ob_start();
             <p>&copy; ETU003280 ETU003299 ETU003313</p>
         </div>
     </div>
+    <script>
+        const apiBase = "http://localhost/projet-final-S4/ws";
+
+        function ajax(method, url, data, callback) {
+            const xhr = new XMLHttpRequest();
+            xhr.open(method, apiBase + url, true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        callback(JSON.parse(xhr.responseText));
+                    } else {
+                        alert("Erreur: " + xhr.statusText);
+                    }
+                }
+            };
+            xhr.send(data);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchStats();
+        });
+
+        function fetchStats() {
+            ajax('GET', '/stats', null, (response) => {
+                if (response) {
+                    // Update Active Loans
+                    document.querySelector('.stat-item:nth-child(1) .stat-number').textContent = response.active_loans;
+
+                    // Update Repayment Rate
+                    document.querySelector('.stat-item:nth-child(2) .stat-number').textContent = response.repayment_rate.toFixed(2) + '%';
+
+                    // Update Active Clients
+                    document.querySelector('.stat-item:nth-child(3) .stat-number').textContent = response.active_clients;
+
+                    // Update Available Funds
+                    document.querySelector('.stat-item:nth-child(4) .stat-number').textContent = formatFunds(response.available_funds);
+                } else {
+                    console.error('Erreur: réponse vide');
+                }
+            }, (xhr) => {
+                console.error('Erreur lors de la récupération des statistiques:', xhr.statusText);
+            });
+        }
+
+        function formatFunds(amount) {
+            if (amount >= 1000000) {
+                return (amount / 1000000).toFixed(1) + 'M';
+            } else if (amount >= 1000) {
+                return (amount / 1000).toFixed(1) + 'K';
+            }
+            return amount.toFixed(2);
+        }
+    </script>
 </body>
+
 </html>
 
 <?php

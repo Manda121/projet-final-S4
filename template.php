@@ -270,7 +270,7 @@ $activeMenu = isset($activeMenu) ? $activeMenu : 'accueil';
             <p>Système de gestion</p>
         </div>
         <nav class="menu-list">
-            <a href="home.php" class="menu-item <?php echo $activeMenu === 'accueil' ? 'active' : ''; ?>">
+            <a href="home.php" class="menu-item <?php echo $activeMenu === 'home' ? 'active' : ''; ?>">
                 <span class="menu-icon">🏠</span>
                 <span class="menu-text">Accueil</span>
             </a>

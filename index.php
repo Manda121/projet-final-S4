@@ -597,7 +597,7 @@ session_start();
 
         function register() {
             if (!validatePassword()) {
-                showRegisterError("Veuillez corriger les erreurs de mot de passe avant de soumettre.");
+                showRegisterError("suivez le contrainte: mot de passe: 8 caractere minimum, au moins un majuscule");
                 return;
             }
 
