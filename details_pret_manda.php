@@ -16,6 +16,8 @@ if (!isset($_GET['id_pret']) || !is_numeric($_GET['id_pret'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="remboursement.css">
     <title>Détails du Prêt</title>
     <style>
         * {
@@ -182,7 +184,7 @@ if (!isset($_GET['id_pret']) || !is_numeric($_GET['id_pret'])) {
             <dt>Description:</dt>
             <dd id="description"></dd>
         </dl>
-        <button onclick="exporterPDF()">Exporter en PDF</button>
+        <button onclick="exporterPDF()" class="btn">Exporter en PDF</button>
     </div>
 
     <h3>Remboursements</h3>
@@ -198,7 +200,7 @@ if (!isset($_GET['id_pret']) || !is_numeric($_GET['id_pret'])) {
     </table>
 
     <script>
-        const apiBase = "http://localhost/projet-final-S4/ws";
+        const apiBase = "/projet-final-S4/ws";
         const idPret = <?php echo json_encode($_GET['id_pret']); ?>;
 
         function ajax(method, url, data, callback) {

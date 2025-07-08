@@ -11,68 +11,73 @@ ob_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="remboursement.css">
     <title>Liste des Prêts</title>
     <style>
-        body {
-            font-family: sans-serif;
-            padding: 20px;
-        }
+        .form-inline {
+    display: flex;
+    flex-wrap: wrap; /* Permet de passer à la ligne si trop long */
+    gap: 15px;
+    align-items: flex-end;
+}
 
-        input,
-        select,
-        button {
-            margin: 5px;
-            padding: 5px;
-        }
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+}
 
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
 
-        th,
-        td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
+.btn {
+    margin-top: 22px;
+    height: 35px;
+}
 
-        th {
-            background-color: #f2f2f2;
-        }
-
-        .filter-form {
-            margin-bottom: 20px;
-        }
     </style>
+   
 </head>
 
 <body>
     <div class="filter-form">
-        <h2>Filtrer les Prêts</h2>
-        <form id="filter-prets-form">
+    <div class="form-container">
+    <h2>Filtrer les Prêts</h2>
+    <form id="client-form" class="form-inline"> <!-- Ajoute form-inline -->
+        <div class="form-group">
             <label for="client">Client:</label>
             <input type="text" id="client" name="client" placeholder="Nom ou prénom du client">
+        </div>
 
+        <div class="form-group">
             <label for="date_debut">Date de début:</label>
             <input type="date" id="date_debut" name="date_debut">
+        </div>
 
+        <div class="form-group">
             <label for="date_fin">Date de fin:</label>
             <input type="date" id="date_fin" name="date_fin">
+        </div>
 
+        <div class="form-group">    
             <label for="montant_min">Montant minimum:</label>
             <input type="number" id="montant_min" name="montant_min" step="0.01">
+        </div>
 
+        <div class="form-group">
             <label for="montant_max">Montant maximum:</label>
             <input type="number" id="montant_max" name="montant_max" step="0.01">
+        </div>
 
+        <div class="form-group">
             <label for="type_pret">Type de prêt:</label>
-            <select id="type_pret" name="type_pret">
-                <option value="">Tous</option>
-                <!-- Options will be populated dynamically -->
-            </select>
+            <select id="type_pret" name="type_pret"></select>
+        </div>
 
+        <div class="form-group">
             <label for="etat">État:</label>
             <select id="etat" name="etat">
                 <option value="">Tous</option>
@@ -80,10 +85,15 @@ ob_start();
                 <option value="validee">Validée</option>
                 <option value="refusee">Refusée</option>
             </select>
+        </div>
 
-            <button type="button" onclick="filtrerPrets()">Filtrer</button>
-            <button type="button" onclick="resetFilters()">Réinitialiser</button>
-        </form>
+        <div class="form-group">
+            <button type="button" class="btn" onclick="filtrerPrets()">Filtrer</button>
+        </div>
+            <button type="button" class="btn" onclick="resetFilters()">Réinitialiser</button>
+    </form>
+</div>
+
     </div>
 
     <table id="table-prets">
@@ -103,7 +113,7 @@ ob_start();
     </table>
 
     <script>
-        const apiBase = "http://localhost/projet-final-S4/ws";
+        const apiBase = "/projet-final-S4/ws";
 
         function ajax(method, url, data, callback) {
             const xhr = new XMLHttpRequest();

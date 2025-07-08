@@ -9,14 +9,9 @@ ob_start();
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Gestion des fonds</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    input, button { margin: 5px; padding: 5px; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background-color: #f2f2f2; }
-  </style>
+  <title>Gestion des fonds</title>  
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="remboursement.css">
 </head>
 <body>
 
@@ -24,8 +19,11 @@ ob_start();
 
   <div>
     <input type="hidden" id="id">
-    <input type="number" id="montant" placeholder="montant">
-    <button onclick="ajouterFond()">Ajouter / Modifier</button>
+    <div class="form-group">
+      <input type="number" id="montant" placeholder="montant">
+    </div>
+    <button onclick="ajouterFond()" class="btn">Ajouter / Modifier</button>
+    <br><br>
   </div>
 
   <table id="table-fond">
@@ -38,7 +36,7 @@ ob_start();
   </table>
 
   <script>
-    const apiBase = "http://localhost/projet-final-S4/ws";
+    const apiBase = "/projet-final-S4/ws";
 
     function chargerFond() {
     const id=1;

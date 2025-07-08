@@ -158,7 +158,14 @@ ob_start();
         min-width: 600px;
     }
 }
+
+#ajout {
+    background-color: red ;
+    color: white;
+}
 </style>
+
+<link rel="stylesheet" href="style.css">
 
 <div class="container">
     <header class="content-header">
@@ -194,11 +201,11 @@ ob_start();
                             <button type="button" class="menu-" onclick="removeTaux(this)">🗑️</button>
                         </div>
                     </div>
-                    <button type="button" class="menu-" onclick="addTaux()">Ajouter Taux</button>
+                    <button type="button" class="btn" id="ajout" onclick="addTaux()">Ajouter Taux</button>
                 </div>
             </div>
             <div class="pret-form-buttons">
-                <button type="button" class="menu-" onclick="ajouterTypePret()">Créer Type de Prêt</button>
+                <button type="button" class="btn" onclick="ajouterTypePret()">Créer Type de Prêt</button>
             </div>
         </form>
     </div>
@@ -222,7 +229,7 @@ ob_start();
 </div>
 
 <script>
-const apiBase = "http://localhost/projet-final-S4/ws";
+const apiBase = "/projet-final-S4/ws";
 
 function ajax(method, url, data, callback) {
     const xhr = new XMLHttpRequest();

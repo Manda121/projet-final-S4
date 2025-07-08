@@ -4,11 +4,28 @@ $pageTitle = 'Ajouter un Client';
 $activeMenu = 'ajout_client';
 ob_start();
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="remboursement.css">
+    <title>Document</title>
+    <style>
+        body {
+            background-color:whitesmoke ;
+        }
+    </style>
+</head>
+<body>
+    
 
 <div class="container">
     <header class="content-header">
         <h1>Ajouter un Client</h1>
         <p>Ajoutez un client avec un rôle client par défaut</p>
+
     </header>
 
     <div class="form-container">
@@ -37,7 +54,7 @@ ob_start();
                 </div>
             </div>
             <div class="form-actions">
-                <button type="button" onclick="addClient()" class="menu-item">Ajouter Client</button>
+                <button type="button" onclick="addClient()" class="btn">Ajouter Client</button>
             </div>
         </form>
         <div id="error-message" class="error-message"></div>
@@ -62,7 +79,7 @@ ob_start();
 </div>
 
 <script>
-    const apiBase = "http://localhost/projet-final-S4/ws";
+    const apiBase = "/projet-final-S4/ws";
 
     function ajax(method, url, data, callback) {
         const xhr = new XMLHttpRequest();
@@ -147,3 +164,6 @@ ob_start();
 $pageContent = ob_get_clean();
 require 'template.php';
 ?>
+
+</body>
+</html>

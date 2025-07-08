@@ -496,7 +496,7 @@ session_start();
             });
         });
 
-        const apiBase = "http://localhost/projet-final-S4/ws";
+        const apiBase = "/projet-final-S4/ws";
 
         function ajax(method, url, data, callback, errorCallback) {
             const xhr = new XMLHttpRequest();
@@ -597,7 +597,7 @@ session_start();
 
         function register() {
             if (!validatePassword()) {
-                showRegisterError("suivez le contrainte: mot de passe: 8 caractere minimum, au moins un majuscule");
+                showRegisterError("Veuillez corriger les erreurs de mot de passe avant de soumettre.");
                 return;
             }
 

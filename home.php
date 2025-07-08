@@ -20,7 +20,7 @@ ob_start();
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f7fa;
             min-height: 100vh;
             color: #333;
         }
@@ -29,17 +29,23 @@ ob_start();
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background-color: rgb(75, 91, 162);
+            background: white;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
         }
 
         .header {
             text-align: center;
             margin-bottom: 50px;
             padding: 40px 0;
+            background: linear-gradient(135deg, #4b5ba2 0%, #2c3e50 100%);
+            border-radius: 10px;
+            color: white;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .header h1 {
-            color: blue;
+            color: #fff;
             font-size: 3em;
             font-weight: 700;
             margin-bottom: 10px;
@@ -47,7 +53,7 @@ ob_start();
         }
 
         .header p {
-            color: rgb(217, 255, 0);
+            color: #ffed4e;
             font-size: 1.2em;
             opacity: 0.9;
         }
@@ -67,6 +73,7 @@ ob_start();
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            border: 1px solid #e0e6ed;
         }
 
         .card::before {
@@ -76,7 +83,7 @@ ob_start();
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #ffd700, #ffed4e);
+            background: linear-gradient(90deg, #4b5ba2, #667eea);
         }
 
         .card:hover {
@@ -88,6 +95,7 @@ ob_start();
             font-size: 3em;
             margin-bottom: 20px;
             display: block;
+            color: #4b5ba2;
         }
 
         .card h3 {
@@ -105,7 +113,7 @@ ob_start();
 
         .card-link {
             display: inline-block;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(45deg, #4b5ba2, #667eea);
             color: white;
             padding: 12px 25px;
             text-decoration: none;
@@ -114,6 +122,7 @@ ob_start();
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            border: none;
         }
 
         .card-link::before {
@@ -123,7 +132,7 @@ ob_start();
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.5s ease;
         }
 
@@ -133,16 +142,15 @@ ob_start();
 
         .card-link:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(75, 91, 162, 0.4);
         }
 
         .stats-section {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             border-radius: 20px;
             padding: 40px;
             margin-bottom: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid #e0e6ed;
         }
 
         .stats-grid {
@@ -153,19 +161,47 @@ ob_start();
 
         .stat-item {
             text-align: center;
-            color: white;
+            background: white;
+            padding: 25px 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #e0e6ed;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
         .stat-number {
             font-size: 2.5em;
             font-weight: 700;
-            color: #ffd700;
             margin-bottom: 10px;
+            background: linear-gradient(45deg, #4b5ba2, #667eea);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         .stat-label {
             font-size: 1.1em;
-            opacity: 0.9;
+            color: #4b5ba2;
+            font-weight: 500;
+        }
+
+        /* Couleurs distinctes pour chaque stat-item */
+        .stat-item:nth-child(1) {
+            border-top: 4px solid #4b5ba2;
+        }
+        .stat-item:nth-child(2) {
+            border-top: 4px solid #28a745;
+        }
+        .stat-item:nth-child(3) {
+            border-top: 4px solid #ffc107;
+        }
+        .stat-item:nth-child(4) {
+            border-top: 4px solid #dc3545;
         }
 
         .quick-actions {
@@ -173,6 +209,7 @@ ob_start();
             border-radius: 20px;
             padding: 40px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e6ed;
         }
 
         .quick-actions h2 {
@@ -212,7 +249,7 @@ ob_start();
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            background: linear-gradient(45deg, #4b5ba2, #667eea);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -223,8 +260,9 @@ ob_start();
 
         .action-btn:hover {
             transform: translateY(-3px);
-            border-color: #ffd700;
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+            border-color: #4b5ba2;
+            box-shadow: 0 5px 15px rgba(75, 91, 162, 0.2);
+            color: #4b5ba2;
         }
 
         .action-btn span {
@@ -236,7 +274,8 @@ ob_start();
             text-align: center;
             margin-top: 50px;
             padding: 30px;
-            color: rgba(255, 255, 255, 0.8);
+            color: #7f8c8d;
+            font-size: 0.9em;
         }
 
         @media (max-width: 768px) {
@@ -260,6 +299,16 @@ ob_start();
             .quick-actions {
                 padding: 20px;
             }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -268,7 +317,7 @@ ob_start();
     <div class="container">
         <div class="header">
             <h1>Gestion Prêts</h1>
-            <h1>ETU003280 ETU003299 ETU3313</h1>
+            <h2>ETU003280 ETU003299 ETU3313</h2>
             <p>Système de gestion financière moderne et professionnel</p>
         </div>
 
@@ -360,11 +409,11 @@ ob_start();
         </div>
 
         <div class="footer">
-            <p>&copy; ETU003280 ETU003299 ETU003313</p>
+            <p>&copy; 2023 Gestion Prêts - ETU003280 ETU003299 ETU003313</p>
         </div>
     </div>
     <script>
-        const apiBase = "http://localhost/projet-final-S4/ws";
+        const apiBase = "/projet-final-S4/ws";
 
         function ajax(method, url, data, callback) {
             const xhr = new XMLHttpRequest();

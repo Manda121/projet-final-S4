@@ -34,7 +34,7 @@ session_start();
   </table>
 
   <script>
-    const apiBase = "http://localhost/projet-final-S4/ws";
+    const apiBase = "/projet-final-S4/ws";
 
 
     function ajax(method, url, data, callback) {

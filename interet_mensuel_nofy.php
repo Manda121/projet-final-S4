@@ -136,7 +136,7 @@ ob_start();
   </div>
 
   <script>
-    const apiBase = "http://localhost/projet-final-S4/ws";
+    const apiBase = "/projet-final-S4/ws";
     let chartInstance = null;
 
     function ajax(method, url, data, callback) {
